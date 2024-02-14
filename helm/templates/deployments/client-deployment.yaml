@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}-client-deployment
+spec:
+  replicas: {{ .Values.client.replicas }}
+  selector:
+    matchLabels:
+      component: web
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: shatsberg/multi-client
+          ports:
+            - containerPort: 3000
