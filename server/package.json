@@ -9,7 +9,8 @@
     },
     "scripts": {
       "dev": "nodemon",
-      "start": "node index.js"
+      "start": "node index.js",
+      "test": "echo hi"
     }
   }
   
