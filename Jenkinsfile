@@ -31,7 +31,7 @@ podTemplate(containers:
     node(POD_LABEL) {
         def app
         stage('checkout'){
-        git url: 'git@github.com:OfekSD/fib_calculator_k8s.git', credentials: 'github-creds'  branch: 'main'
+        git url: 'git@github.com:OfekSD/fib_calculator_k8s.git', credentials: 'github-creds',  branch: 'main'
         }
         stage{
 
