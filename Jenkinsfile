@@ -1,21 +1,21 @@
 
 
 def service_pipe(service_name){    
-        stage('${service_name} - Test Code'){
+        stage("${service_name} - Test Code"){
             container('node') {
-            dir('${service_name}'){
+            dir("${service_name}"){
                 sh 'ls -l'
                 sh 'npm install'
                 sh 'npm test'
             }
             }
         }
-        stage('${service_name} - Build Image'){
+        stage("${service_name} - Build Image"){
             container('docker') {
-                app = docker.build('pandalamdta/${service_name}')
+                app = docker.build("pandalamdta/${service_name}")
             }
         }
-        stage('${service_name} - Push image') {
+        stage("${service_name} - Push image") {
             container('docker') {
                 docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                     app.push("${env.BUILD_NUMBER}")
