@@ -33,9 +33,6 @@ podTemplate(containers:
         stage('checkout'){
         git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
         }
-        stage{
-
-        }
         stage('server'){
             service_pipe('server')
         }
