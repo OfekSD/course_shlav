@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fib-calc.fullname" . }}-server
+spec:
+  replicas: {{ .Values.server.replicas }}
+  selector:
+    matchLabels:
+      component: server
+      {{ include "fib-calc.selectorLabels" . | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        component: server
+        {{ include "fib-calc.labels" . | nindent 4  }}
+    spec:
+      containers:
+      - name: server
+        image: pandalamdta/server
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+          {{- if .Values.redis.enabled }}
+          name: {{ include "fib-calc.fullname" . }}-redis-creds
+          {{ else }}
+          name: {{ required "if you are using an allredy exist redis you must spesefy credentials" .Values.redis.credSecret  }}
+          {{ end }}
+          {{- if .Values.postgres.enabled }}
+          name: {{ include "fib-calc.fullname" . }}-postgres-creds
+          {{ else }}
+          name: {{ required "if you are using an allredy exist postgres you must spesefy credentials" .Values.redis.credSecret  }}
+          {{ end }}

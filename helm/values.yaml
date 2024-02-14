@@ -20,3 +20,10 @@ server:
   replicas: 1
 worker:
   replicas: 1
+redis:
+  enabled: true
+  credSecret: ''
+
+postgres:
+  enabled: true
+  credSecret: ''

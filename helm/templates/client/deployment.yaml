@@ -1,19 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-client-deployment
+  name: {{ include "fib-calc.fullname" . }}-client-deployment
 spec:
   replicas: {{ .Values.client.replicas }}
   selector:
     matchLabels:
       component: web
+      {{ include "fib-calc.selectorLabels" . | nindent 4}}
   template:
     metadata:
       labels:
         component: web
+        {{ include "fib-calc.labels" . | nindent 4}}
     spec:
       containers:
         - name: client
-          image: shatsberg/multi-client
+          image: pandalamdta/client
           ports:
             - containerPort: 3000

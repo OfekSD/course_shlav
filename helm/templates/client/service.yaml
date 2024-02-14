@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: client-cluster-ip-service
+  name: {{ include "fib-calc.fullname" . }}-client
 spec:
   type: ClusterIP
   selector:
     component: web
+    {{ include "fib-calc.selectorLabels" . | nindent 4 }}
   ports:
   - port: 3000
     targetPort: 3000
