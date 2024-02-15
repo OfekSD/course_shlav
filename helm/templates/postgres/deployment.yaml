@@ -3,21 +3,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres-deployment
+  name: {{include "fib-calc.fullname" .}}-postgres
 spec:
   replicas: 1
   selector:
     matchLabels:
       component: postgres
+      {{ include "fib-calc.selectorLabels" . | nindent 4 }}
   template:
     metadata:
       labels:
         component: postgres
+      {{ include "fib-calc.labels" . | nindent 8 }}
     spec:
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
-            claimName: database-persistent-volume-claim
+            claimName: {{include "fib-calc.fullname" .}}-pg-data
       containers:
       - name: postgres
         image: postgres
@@ -31,6 +33,6 @@ spec:
           - name: POSTGRES_PASSWORD
             valueFrom:
                 secretKeyRef:
-                  name: pgpassword
+                  name: {{ include "fib-calc.fullname" . }}-postgres-creds
                   key: PGPASSWORD
 {{- end}}

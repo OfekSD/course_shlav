@@ -27,3 +27,6 @@ redis:
 postgres:
   enabled: true
   credSecret: ''
+ingress:
+  enabled: true
+  hostnmae: 'fib.localhost'

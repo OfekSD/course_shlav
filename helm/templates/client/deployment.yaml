@@ -7,12 +7,12 @@ spec:
   selector:
     matchLabels:
       component: web
-      {{ include "fib-calc.selectorLabels" . | nindent 4}}
+      {{ include "fib-calc.selectorLabels" . | nindent 4 }}
   template:
     metadata:
       labels:
         component: web
-        {{ include "fib-calc.labels" . | nindent 4}}
+        {{ include "fib-calc.labels" . | nindent 8}}
     spec:
       containers:
         - name: client

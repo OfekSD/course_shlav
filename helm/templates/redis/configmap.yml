@@ -1,0 +1,10 @@
+{{- if .Values.redis.enabled}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fib-calc.fullname" . }}-redis-creds
+data:
+  REDIS_HOST: {{ include "fib-calc.fullname" .}}-redis
+  REDIS-PORT: "6379"
+{{end}}
