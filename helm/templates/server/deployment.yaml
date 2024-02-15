@@ -24,11 +24,11 @@ spec:
           {{- if .Values.redis.enabled }}
             name: {{ include "fib-calc.fullname" . }}-redis-creds
           {{ else }}
-            name: {{ required "if you are using an allredy exist redis you must spesefy credentials" .Values.redis.credSecret  }}
+            name: {{ required "if you are using an allredy exist redis you must spesefy credentials" .Values.redis.credConfigMap  }}
           {{ end }}
         - secretRef: 
         {{- if .Values.postgres.enabled }}
             name: {{ include "fib-calc.fullname" . }}-postgres-creds
         {{ else }}
-            name: {{ required "if you are using an allredy exist postgres you must spesefy credentials" .Values.redis.credSecret  }}
+            name: {{ required "if you are using an allredy exist postgres you must spesefy credentials" .Values.postgres.credSecret  }}
         {{ end }}

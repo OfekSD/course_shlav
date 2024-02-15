@@ -22,7 +22,7 @@ worker:
   replicas: 1
 redis:
   enabled: true
-  credSecret: ''
+  credConfigMap: ''
 
 postgres:
   enabled: true

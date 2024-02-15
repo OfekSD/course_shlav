@@ -22,5 +22,5 @@ spec:
           {{- if .Values.redis.enabled }}
             name: {{ include "fib-calc.fullname" . }}-redis-creds
           {{ else }}
-            name: {{ required "if you are using an allredy exist redis you must spesefy credentials" .Values.redis.credSecret  }}
+            name: {{ required "if you are using an allredy exist redis you must spesefy credentials" .Values.redis.credConfigMap  }}
           {{ end }}
