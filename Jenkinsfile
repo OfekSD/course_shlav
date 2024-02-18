@@ -192,11 +192,11 @@ spec:
         // stage('Helm - Test') {
         //     steps {
         //         script {
-        //             def changesStatus 
+        //             def changesStatus
         //             container('git') {
         //                 sh "git config --global --add safe.directory '*'"
         //                 sh 'git status'
-                        
+
         //                changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
         //             }
         //             if (changesStatus == 0) {
@@ -220,20 +220,24 @@ spec:
                         sh "git config --global --add safe.directory '*'"
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                         if (changesStatus == 0) {
-                            withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
+                                sh 'GIT_SSH_COMMAND = "ssh -i $key"'
+
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
                                 sh 'git config user.name jenkins-pipeline'
                                 sh 'git add ./helm'
                                 sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}' updated helm"
-                                gitPush
-                            }
+                                sh 'git push git@github.com:OfekSD/fib_calculator_k8s.git'
+                        }
+
                         }
                     }
                 }
             }
         }
     }
+}
 }
 
