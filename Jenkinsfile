@@ -225,8 +225,9 @@ spec:
                             
                                 sh 'GIT_SSH_COMMAND = "ssh -i $key"'
                                 sh 'echo $GIT_SSH_COMMAND'
-                                sh 'git'
-                                sh 'ssh'
+                                sh 'git --help'
+                                sh 'ssh --help'
+                                sh '$GIT_SSH_COMMAND --help'
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
