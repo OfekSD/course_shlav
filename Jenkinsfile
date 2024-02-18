@@ -46,10 +46,11 @@ pipeline{
                 when { changeset "server/**"}
                 steps{
                     container('docker') {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
+                    
+                        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                            app.push("${env.BUILD_NUMBER}")
+                            app.push("latest")
+                        }
                     }
                 }
         }
@@ -69,7 +70,9 @@ pipeline{
                 steps{
                     container('docker') {
                     dir("worker"){
-                        app = docker.build("pandalamdta/worker")
+                        script{
+                            app = docker.build("pandalamdta/worker")
+                        }
                     }
                     }
                 }
@@ -101,7 +104,9 @@ pipeline{
                 steps{
                     container('docker') {
                     dir("client"){
+                        script{
                         app = docker.build("pandalamdta/client")
+                        }
                     }
                     }
                 }
