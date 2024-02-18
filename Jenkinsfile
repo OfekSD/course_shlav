@@ -217,12 +217,16 @@ spec:
             steps {
                 container('git') {
                     script {
+
                         sh "git config --global --add safe.directory '*'"
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
+                            
                                 sh 'GIT_SSH_COMMAND = "ssh -i $key"'
-
+                                sh 'echo $GIT_SSH_COMMAND'
+                                sh 'git'
+                                sh 'ssh'
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
