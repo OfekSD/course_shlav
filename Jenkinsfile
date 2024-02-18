@@ -97,7 +97,7 @@ spec:
             when { changeset 'server/**' }
             steps {
                     container('yq') {
-                        sh "yq -i '.server.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
+                        sh "yq -i -y '.server.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
                     }
             }
         }
@@ -137,7 +137,7 @@ spec:
                 when { changeset 'worker/**' }
                 steps {
                         container('yq') {
-                            sh "yq -i '.worker.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
+                            sh "yq -i -y '.worker.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
                         }
                 }
         }
@@ -178,7 +178,7 @@ spec:
             when { changeset 'client/**' }
             steps {
                 container('yq') {
-                    sh "yq -i '.client.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
+                    sh "yq -i -y '.client.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
                 }
             }
         }
