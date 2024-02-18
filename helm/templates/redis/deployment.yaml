@@ -8,13 +8,13 @@ spec:
   selector:
     matchLabels:
       component: redis
-      {{ include "fib-calc.selectorLabels" . | nindent 4  }}
+        {{ include "fib-calc.selectorLabels" . | nindent 6  }}
       
   template:
     metadata:
       labels:
         component: redis
-        {{ include "fib-calc.labels" . | nindent 4  }}
+        {{ include "fib-calc.labels" . | nindent 8  }}
     spec:
       containers:
       - name: redis

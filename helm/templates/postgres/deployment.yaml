@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       component: postgres
-      {{ include "fib-calc.selectorLabels" . | nindent 4 }}
+      {{ include "fib-calc.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:

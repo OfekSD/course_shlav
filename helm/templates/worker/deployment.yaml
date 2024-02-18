@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       component: worker
-      {{ include "fib-calc.selectorLabels" . | nindent 4}}
+      {{ include "fib-calc.selectorLabels" . | nindent 6}}
   template:
     metadata:
       labels:
