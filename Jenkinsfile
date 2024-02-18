@@ -50,7 +50,6 @@ pipeline {
             }
         }
         
-        def app
         stage("server - Test Code"){
             container('node') {
                 when { changeset "server/**"}
@@ -63,6 +62,7 @@ pipeline {
             }
         }
         stage("server - Build Image"){
+            def app
             container('docker') {
                 when { changeset "server/**"}
                 steps{
@@ -95,6 +95,7 @@ pipeline {
             }
         }
         stage("worker - Build Image"){
+            def app
             container('docker') {
                 when { changeset "worker/**"}
                 steps{
@@ -127,6 +128,7 @@ pipeline {
             }
         }
         stage("client - Build Image"){
+            def app
             container('docker') {
                 when { changeset "client/**"}
                 steps{
