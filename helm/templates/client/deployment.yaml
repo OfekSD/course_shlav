@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: client
-          image: pandalamdta/client
+          image: pandalamdta/client:{{ .Values.client.image.tag }}
           ports:
             - containerPort: 3000

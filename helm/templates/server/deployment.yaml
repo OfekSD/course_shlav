@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: pandalamdta/server
+        image: pandalamdta/server:{{ .Values.server.image.tag }}
         ports:
         - containerPort: 5000
         envFrom:
