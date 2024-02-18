@@ -16,9 +16,6 @@ spec:
     - name: ssh-key
       secret:
         secretName: ssh-key
-        items:
-        - key: id_rsa
-          path: id_rsa
   containers:
   - name: docker
     image: docker
@@ -45,9 +42,8 @@ spec:
     args:
     - infinity
     volumeMounts:
-    - mountPath: "/root/.ssh"
+    - mountPath: "/tmp/key"
       name: ssh-key
-      subPath: id_rsa
       readOnly: true
   - name: node
     image: node:16-alpine
@@ -234,6 +230,7 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                                 sh 'mkdir -p ~/.ssh'
+                                sh 'cp /tmp/key/id_rsa ~/.ssh/id_rsa'
                                 sh 'ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
                                 // sh 'GIT_SSH_COMMAND="ssh -i $key"'
                                 sh "git config --global --add safe.directory '*'"
