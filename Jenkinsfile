@@ -1,7 +1,4 @@
-
-
 def service_pipe(service_name){    
-    
         stage("${service_name} - Test Code"){
             container('node') {
                 dir("${service_name}"){
@@ -40,13 +37,15 @@ podTemplate(containers:
         stage('server'){
             when {
             anyOf { changeset "server/**" }
+            }
             steps {
-            service_pipe('server')
+                service_pipe('server')
             }
         }
         stage('worker'){
             when {
             anyOf { changeset "worker/**" }
+            }
             steps {
             service_pipe('worker')
             }
@@ -54,6 +53,7 @@ podTemplate(containers:
         stage('client'){
             when {
             anyOf { changeset "client/**" }
+            }
             steps {
             service_pipe('client')
             }
