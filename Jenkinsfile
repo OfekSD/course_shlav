@@ -185,7 +185,7 @@ spec:
         stage('Helm - Lint') {
             steps {
                 container('helm') {
-                    sh 'helm lint'
+                    sh 'helm lint ./helm'
                 }
             }
         }
