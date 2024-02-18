@@ -214,7 +214,7 @@ spec:
                 container('git') {
                     script {
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
-                        if (testStatus == 0) {
+                        if (changeStatus == 0) {
                             withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                                 sh 'git config user.email jenkins@example.com'
                                 sh 'git config user.name jenkins-pipeline'
