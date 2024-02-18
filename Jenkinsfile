@@ -51,9 +51,9 @@ pipeline {
         }
         
         stage("server - Test Code"){
-            container('node') {
                 when { changeset "server/**"}
                 steps{
+                    container('node') {
                     dir("server"){
                         sh 'npm install'
                         sh 'npm test'
@@ -62,10 +62,10 @@ pipeline {
             }
         }
         stage("server - Build Image"){
-            def app
-            container('docker') {
                 when { changeset "server/**"}
                 steps{
+                    def app
+                    container('docker') {
                     dir("server"){
                         app = docker.build("pandalamdta/server")
                     }
@@ -73,9 +73,9 @@ pipeline {
             }
         }
         stage("server - Push image") {
-            container('docker') {
                 when { changeset "server/**"}
                 steps{
+                    container('docker') {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
@@ -84,9 +84,9 @@ pipeline {
             }
         }
                 stage("worker - Test Code"){
-            container('node') {
                 when { changeset "worker/**"}
                 steps{
+                    container('node') {
                     dir("worker"){
                         sh 'npm install'
                         sh 'npm test'
@@ -96,9 +96,9 @@ pipeline {
         }
         stage("worker - Build Image"){
             def app
-            container('docker') {
                 when { changeset "worker/**"}
                 steps{
+                    container('docker') {
                     dir("worker"){
                         app = docker.build("pandalamdta/worker")
                     }
@@ -106,9 +106,9 @@ pipeline {
             }
         }
         stage("worker - Push image") {
-            container('docker') {
                 when { changeset "worker/**"}
                 steps{
+                    container('docker') {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
@@ -117,9 +117,9 @@ pipeline {
             }
         }
                 stage("client - Test Code"){
-            container('node') {
                 when { changeset "client/**"}
                 steps{
+                    container('node') {
                     dir("client"){
                         sh 'npm install'
                         sh 'npm test'
@@ -128,10 +128,10 @@ pipeline {
             }
         }
         stage("client - Build Image"){
-            def app
-            container('docker') {
                 when { changeset "client/**"}
                 steps{
+                    def app
+                    container('docker') {
                     dir("client"){
                         app = docker.build("pandalamdta/client")
                     }
@@ -139,9 +139,9 @@ pipeline {
             }
         }
         stage("client - Push image") {
-            container('docker') {
                 when { changeset "client/**"}
                 steps{
+                    container('docker') {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
