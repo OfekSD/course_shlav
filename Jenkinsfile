@@ -1,14 +1,35 @@
 def app
 pipeline{
-    agent {
-        kubernetes {
-            containerTemplates:
-                [containerTemplate(name: 'node', image: 'node:16-alpine', command: 'sleep', args: 'infinity'),
-                containerTemplate(name: 'docker', image: 'docker', command: 'sleep', args: 'infinity'),]
-            
-            volumes: [hostPathVolume(mountPath:'/var/run/docker.sock',hostPath: '/var/run/docker.sock'),]
-        }
-    }
+agent {
+  kubernetes {
+    defaultContainer 'docker'
+    yaml '''apiVersion: v1
+kind: Pod
+spec:
+  volumes:
+    - name: dockersock
+      hostPath:
+        path: /var/run/docker.sock
+  containers:
+  - name: docker
+    image: docker
+    command:
+    - sleep
+    args:
+    - infinity
+    volumeMounts:
+    - name: dockersock
+      mountPath: "/var/run/docker.sock"
+  - name: node
+    image: node:16-alpine
+    command:
+    - sleep
+    args:
+    - infinity
+  '''
+  }
+}
+
 
     stages{
 
