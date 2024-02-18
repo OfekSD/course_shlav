@@ -194,7 +194,7 @@ spec:
                 script {
                     container('git') {
                         sh "git config --global --add safe.directory '*'"
-                        sh 'git status | grep modified | grep helm'
+                        sh 'git status'
                         
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                     }
