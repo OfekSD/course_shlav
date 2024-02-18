@@ -1,6 +1,8 @@
 
 
 def service_pipe(service_name){    
+    
+    }
         stage("${service_name} - Test Code"){
             container('node') {
                 dir("${service_name}"){
@@ -35,14 +37,27 @@ podTemplate(containers:
         stage('checkout'){
         git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
         }
+        
         stage('server'){
+            when {
+            anyOf { changeset "server/**" }
+            steps {
             service_pipe('server')
+            }
         }
         stage('worker'){
+            when {
+            anyOf { changeset "worker/**" }
+            steps {
             service_pipe('worker')
+            }
         }
         stage('client'){
+            when {
+            anyOf { changeset "client/**" }
+            steps {
             service_pipe('client')
+            }
         }
     }
 }
