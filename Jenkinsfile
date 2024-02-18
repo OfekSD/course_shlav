@@ -204,6 +204,10 @@ spec:
             }
         }
         stage('Git Push Changes'){
+            steps{
+                container('git'){
+
+
               def changesStatus = sh script: "git status | grep modified | grep helm", returnStatus: true
                     if (testStatus == 0){
                         withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
@@ -213,6 +217,8 @@ spec:
                             sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}' updated helm"
                             sh "git push"
                         }
+                }
+            }
 
                     }
         }
