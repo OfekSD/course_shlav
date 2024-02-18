@@ -2,7 +2,6 @@
 
 def service_pipe(service_name){    
     
-    }
         stage("${service_name} - Test Code"){
             container('node') {
                 dir("${service_name}"){
