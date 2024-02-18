@@ -1,5 +1,5 @@
 def app
-pipeline {
+pipeline{
     agent {
         kubernetes {
             podTemplate(containers:
@@ -17,7 +17,7 @@ pipeline {
                 git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
             }
         }
-        
+
         stage("server - Test Code"){
                 when { changeset "server/**"}
                 steps{
@@ -26,18 +26,21 @@ pipeline {
                         sh 'npm install'
                         sh 'npm test'
                     }
+                    }
                 }
-            }
         }
         stage("server - Build Image"){
                 when { changeset "server/**"}
                 steps{
                     container('docker') {
+
                     dir("server"){
+                    script{
                         app = docker.build("pandalamdta/server")
                     }
+                    }
+                    }
                 }
-            }
         }
         stage("server - Push image") {
                 when { changeset "server/**"}
@@ -47,17 +50,17 @@ pipeline {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
-                }
-            }
-        }
-                stage("worker - Test Code"){
-                when { changeset "worker/**"}
-                steps{
-                    container('node') {
-                    dir("worker"){
-                        sh 'npm install'
-                        sh 'npm test'
                     }
+                }
+        }
+        stage("worker - Test Code"){
+            when { changeset "worker/**"}
+            steps{
+                container('node') {
+                dir("worker"){
+                    sh 'npm install'
+                    sh 'npm test'
+                }
                 }
             }
         }
@@ -68,8 +71,8 @@ pipeline {
                     dir("worker"){
                         app = docker.build("pandalamdta/worker")
                     }
+                    }
                 }
-            }
         }
         stage("worker - Push image") {
                 when { changeset "worker/**"}
@@ -79,13 +82,13 @@ pipeline {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
+                    }
                 }
-            }
         }
-                stage("client - Test Code"){
-                when { changeset "client/**"}
-                steps{
-                    container('node') {
+        stage("client - Test Code"){
+            when { changeset "client/**"}
+            steps{
+                container('node') {
                     dir("client"){
                         sh 'npm install'
                         sh 'npm test'
@@ -100,19 +103,19 @@ pipeline {
                     dir("client"){
                         app = docker.build("pandalamdta/client")
                     }
+                    }
                 }
-            }
         }
         stage("client - Push image") {
                 when { changeset "client/**"}
                 steps{
                     container('docker') {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                            app.push("${env.BUILD_NUMBER}")
+                            app.push("latest")
+                        }
                     }
                 }
-            }
         }
     }
 }
