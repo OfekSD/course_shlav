@@ -230,7 +230,7 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                                 sh 'mkdir -p ~/.ssh'
-                                sh 'cp /tmp/key/id_rsa ~/.ssh/id_rsa'
+                                sh 'cp /tmp/key/ssh-privatekey ~/.ssh/id_rsa'
                                 sh 'ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
                                 // sh 'GIT_SSH_COMMAND="ssh -i $key"'
                                 sh "git config --global --add safe.directory '*'"
