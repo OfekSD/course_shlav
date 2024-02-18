@@ -223,7 +223,7 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                             
-                                sh 'GIT_SSH_COMMAND = "ssh -i $key -o IdentitiesOnly=yes -F /dev/null" '
+                            withEnv(['GIT_SSH_COMMAND ="ssh -i $key -o IdentitiesOnly=yes -F /dev/null"']) {
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
@@ -231,6 +231,7 @@ spec:
                                 sh 'git add ./helm'
                                 sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}' updated helm"
                                 sh 'git push git@github.com:OfekSD/fib_calculator_k8s.git'
+                            }
                         }
 
                         }
