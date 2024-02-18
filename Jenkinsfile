@@ -35,7 +35,7 @@ podTemplate(containers:
         }
         
         stage('server'){
-            when {
+            if {
             anyOf { changeset "server/**" }
             }
             steps {
@@ -43,7 +43,7 @@ podTemplate(containers:
             }
         }
         stage('worker'){
-            when {
+            if {
             anyOf { changeset "worker/**" }
             }
             steps {
@@ -51,7 +51,7 @@ podTemplate(containers:
             }
         }
         stage('client'){
-            when {
+            if {
             anyOf { changeset "client/**" }
             }
             steps {
