@@ -35,25 +35,25 @@ podTemplate(containers:
         }
         
         stage('server'){
-            if {
+            if (
             anyOf { changeset "server/**" }
-            }
+            )
             steps {
                 service_pipe('server')
             }
         }
         stage('worker'){
-            if {
+            if (
             anyOf { changeset "worker/**" }
-            }
+            )
             steps {
             service_pipe('worker')
             }
         }
         stage('client'){
-            if {
+            if (
             anyOf { changeset "client/**" }
-            }
+            )
             steps {
             service_pipe('client')
             }
