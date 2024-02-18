@@ -57,5 +57,6 @@ pipeline {
         }
         if (anyOf { changeset "client/**" }){
         service_pipe('client')
+        }
     }
 }
