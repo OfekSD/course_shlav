@@ -193,6 +193,7 @@ spec:
             steps {
                 script {
                     container('git') {
+                        sh 'git status | grep modified | grep helm'
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                     }
                     if (changesStatus == 0) {
