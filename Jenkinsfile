@@ -10,6 +10,9 @@ spec:
     - name: dockersock
       hostPath:
         path: /var/run/docker.sock
+    - name: helm
+      hostPath:
+        path: /usr/local/bin/helm
   containers:
   - name: docker
     image: docker
@@ -20,8 +23,29 @@ spec:
     volumeMounts:
     - name: dockersock
       mountPath: "/var/run/docker.sock"
+  - name: helm
+    image: alpine/helm
+    command:
+    - sleep
+    args:
+    - infinity
+    volumeMounts:
+    - name: helm
+      mountPath: "/usr/local/bin/helm"
+  - name: git
+    image: bitnami/git
+    command:
+    - sleep
+    args:
+    - infinity
   - name: node
     image: node:16-alpine
+    command:
+    - sleep
+    args:
+    - infinity
+  - name: yq
+    image: linuxserver/yq
     command:
     - sleep
     args:
@@ -59,13 +83,21 @@ spec:
                 }
         }
         stage('server - Push image') {
-                when { changeset 'server/**' }
-                steps {
-                    script {
-                        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                            app.push("${env.BUILD_NUMBER}")
-                            app.push('latest')
-                        }
+            when { changeset 'server/**' }
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push('latest')
+                    }
+                }
+            }
+        }
+        stage('server - Update Helm Chart Image') {
+            when { changeset 'server/**' }
+            steps {
+                    container("yq"){
+                        sh "yq -i .server.image.tag =  ${env.BUILD_NUMBER}"
                     }
                 }
         }
@@ -101,6 +133,15 @@ spec:
                     }
                 }
         }
+        stage('worker - Update Helm Chart Image') {
+                when { changeset 'worker/**' }
+                steps {
+                        container("yq"){
+                            sh "yq -i .worker.image.tag =  ${env.BUILD_NUMBER}"
+                        }
+                    }
+                }
+        
         stage('client - Test Code') {
             when { changeset 'client/**' }
             steps {
@@ -132,6 +173,48 @@ spec:
                         }
                     }
                 }
+        }
+        stage('client - Update Helm Chart Image') {
+        when { changeset 'client/**' }
+        steps {
+                container("yq"){
+                    sh "yq -i .client.image.tag =  ${env.BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('Helm - Lint'){
+            steps{
+                container("helm"){
+
+                    sh "helm lint"
+                }
+            }
+        stage('Helm - Test'){
+            steps{
+                container("helm"){
+
+                    sh "helm install fib-test ./helm -n fib-calc-test --create-namespace"
+                    def testStatus = sh script: "helm test fib-test -n fib-calc-test", returnStatus: true
+                    if (testStatus > 0){
+                        sh "helm uninstall fib-test -n fib-calc-test"
+                        error: "helm test failed"
+                    }
+                    sh "helm uninstall fib-test -n fib-calc-test"
+                }
+            }
+        }
+        stage('Git Push Changes'){
+              def changesStatus = sh script: "git status | grep modified | grep helm", returnStatus: true
+                    if (testStatus == 0){
+                        withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                            sh "git config user.email jenkins@example.com"
+                            sh "git config user.name jenkins-pipeline"
+                            sh 'git add ./helm'
+                            sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}' updated helm"
+                            sh "git push"
+                        }
+
+                    }
         }
     }
 }
