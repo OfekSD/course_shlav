@@ -5,7 +5,7 @@ client:
   replicas: 1
 server:
   image:
-    tag: latest
+    tag: 38
   replicas: 2
 worker:
   image:
