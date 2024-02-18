@@ -5,7 +5,7 @@ client:
 server:
   image:
     tag: '99'
-  replicas: 2
+  replicas: 1
 worker:
   image:
     tag: latest
