@@ -223,7 +223,7 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                             
-                                sh 'GIT_SSH_COMMAND = "ssh -i $key"'
+                                sh 'export GIT_SSH_COMMAND = "ssh -i $key"'
                                 sh 'echo $GIT_SSH_COMMAND'
                                 sh 'git --help'
                                 sh 'ssh --help'
