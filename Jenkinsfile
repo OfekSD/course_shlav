@@ -57,7 +57,7 @@ spec:
     stages {
         stage('checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
+                git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator.git'
             }
         }
 
@@ -230,7 +230,7 @@ spec:
                                 sh 'git config user.name jenkins-pipeline'
                                 sh 'git add ./helm'
                                 sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER} updated helm'"
-                                sh 'git push git@github.com:OfekSD/fib_calculator_k8s.git'
+                                sh 'git push git@github.com:OfekSD/fib_calculator.git'
                             
                         }
 
