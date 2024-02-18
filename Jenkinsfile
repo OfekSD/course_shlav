@@ -218,7 +218,7 @@ spec:
                 container('git') {
                     script {
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
-                        if (changeStatus == 0) {
+                        if (changesStatus == 0) {
                             withCredentials([usernamePassword(credentialsId: 'github-creds', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
