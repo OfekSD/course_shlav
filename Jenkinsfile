@@ -1,53 +1,61 @@
 def service_pipe(service_name){    
+        def app
         stage("${service_name} - Test Code"){
             container('node') {
-                dir("${service_name}"){
-                    sh 'npm install'
-                    sh 'npm test'
+                steps{
+                    dir("${service_name}"){
+                        sh 'npm install'
+                        sh 'npm test'
+                    }
                 }
             }
         }
         stage("${service_name} - Build Image"){
             container('docker') {
-                dir("${service_name}"){
-                    app = docker.build("pandalamdta/${service_name}")
+                steps{
+                    dir("${service_name}"){
+                        app = docker.build("pandalamdta/${service_name}")
+                    }
                 }
             }
         }
         stage("${service_name} - Push image") {
             container('docker') {
-                docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                steps{
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
                 }
             }
         }
 }
-podTemplate(containers:
-    [containerTemplate(name: 'node', image: 'node:16-alpine', command: 'sleep', args: 'infinity'),
-    containerTemplate(name: 'docker', image: 'docker', command: 'sleep', args: 'infinity'),],
-    ,volumes: [hostPathVolume(mountPath:'/var/run/docker.sock',hostPath: '/var/run/docker.sock'),]
-    ){
-    node(POD_LABEL) {
-        def app
+
+pipeline {
+    agent {
+        kubernetes {
+            podTemplate(containers:
+                [containerTemplate(name: 'node', image: 'node:16-alpine', command: 'sleep', args: 'infinity'),
+                containerTemplate(name: 'docker', image: 'docker', command: 'sleep', args: 'infinity'),],
+                ,volumes: [hostPathVolume(mountPath:'/var/run/docker.sock',hostPath: '/var/run/docker.sock'),]
+        }
+    }
+
+    stages{
+
         stage('checkout'){
-        git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
+            steps{
+                git branch: 'main', credentialsId: 'github-creds', url: 'git@github.com:OfekSD/fib_calculator_k8s.git'
+            }
         }
         
-        stage('server'){
-            if (anyOf { changeset "server/**" }){
-                service_pipe('server')
-            }
+        if (anyOf { changeset "server/**" }){
+            service_pipe('server')
         }
-        stage('worker'){
-            if (anyOf { changeset "worker/**" }){
-            service_pipe('worker')
-            }
+        if (anyOf { changeset "worker/**" }){
+        service_pipe('worker')
         }
-        stage('client'){
-            if (anyOf { changeset "client/**" }){
-            service_pipe('client')
-            }
-        }
+        if (anyOf { changeset "client/**" }){
+        service_pipe('client')
     }
 }
