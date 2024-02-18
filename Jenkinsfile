@@ -44,7 +44,6 @@ spec:
     volumeMounts:
     - mountPath: "/root/.ssh"
       name: ssh-key
-      readOnly: true
   - name: node
     image: node:16-alpine
     command:
