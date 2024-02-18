@@ -16,9 +16,6 @@ spec:
     - name: ssh-key
       secret:
         secretName: ssh-key
-    - name: agent-kubeconfig
-      secret:
-        secretName: agent-kubeconfig
   containers:
   - name: docker
     image: docker
@@ -35,10 +32,13 @@ spec:
     - sleep
     args:
     - infinity
+    env:
+    - name: HELM_KUBETOKEN
+      valueFrom:
+        secretKeyRef:
+            name: jenkins-agent-token
+            key: token
     volumeMounts:
-    - mountPath: "/root/.kube"
-      name: agent-kubeconfig
-      readOnly: true
     - name: helm
       mountPath: "/usr/local/bin/helm"
   - name: git
