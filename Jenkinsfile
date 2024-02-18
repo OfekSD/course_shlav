@@ -192,15 +192,16 @@ spec:
         stage('Helm - Test') {
             steps {
                 script {
+                    def changesStatus 
                     container('git') {
                         sh "git config --global --add safe.directory '*'"
                         sh 'git status'
                         
-                        def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
+                       changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                     }
                     if (changesStatus == 0) {
                         container('helm') {
-                            sh 'helm install fib-test ./helm  --create-namespace'
+                            sh 'helm install fib-test ./helm '
                             def testStatus = sh script: 'helm test fib-test', returnStatus: true
                             if (testStatus > 0) {
                                 sh 'helm uninstall fib-test '
