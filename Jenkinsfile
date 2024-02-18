@@ -185,10 +185,10 @@ spec:
         stage('Helm - Lint'){
             steps{
                 container("helm"){
-
                     sh "helm lint"
                 }
             }
+        }
         stage('Helm - Test'){
             steps{
                 container("helm"){
@@ -218,3 +218,4 @@ spec:
         }
     }
 }
+
