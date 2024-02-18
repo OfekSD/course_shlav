@@ -94,7 +94,7 @@ spec:
             }
         }
         stage('server - Update Helm Chart Image') {
-            when { changeset 'server/**' }
+            // when { changeset 'server/**' }
             steps {
                     container('yq') {
                         sh "yq -i -y '.server.image.tag =  \"${env.BUILD_NUMBER}\"' ./helm/values.yaml"
