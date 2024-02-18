@@ -17,4 +17,4 @@ spec:
       image: busybox
       command: ['wget']
       args: 
-        - {{ include "fib-calc.fullname" . | printf "%s-client:30010"  }}
+        - {{ include "fib-calc.fullname" . | printf "%s-client:3000"  }}
