@@ -4,9 +4,9 @@ pipeline{
         kubernetes {
             containerTemplates:
                 [containerTemplate(name: 'node', image: 'node:16-alpine', command: 'sleep', args: 'infinity'),
-                containerTemplate(name: 'docker', image: 'docker', command: 'sleep', args: 'infinity'),],
-                ,volumes: [hostPathVolume(mountPath:'/var/run/docker.sock',hostPath: '/var/run/docker.sock'),]
+                containerTemplate(name: 'docker', image: 'docker', command: 'sleep', args: 'infinity'),]
             
+            volumes: [hostPathVolume(mountPath:'/var/run/docker.sock',hostPath: '/var/run/docker.sock'),]
         }
     }
 
