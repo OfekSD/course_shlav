@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fib-calc.fullname" . }}-client-deployment
+  name: {{ include "fib-calc.fullname" . }}-client
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: {{ .Values.client.replicas }}
   selector:

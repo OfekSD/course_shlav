@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "fib-calc.fullname" . }}-worker
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: {{ .Values.worker.replicas }}
   selector:

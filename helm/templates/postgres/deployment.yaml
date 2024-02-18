@@ -4,6 +4,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{include "fib-calc.fullname" .}}-postgres
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   replicas: 1
   selector:
