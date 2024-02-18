@@ -1,36 +1,4 @@
-def service_pipe(service_name){    
-        def app
-        stage("worker - Test Code"){
-            container('node') {
-                steps{
-                    dir("worker"){
-                        sh 'npm install'
-                        sh 'npm test'
-                    }
-                }
-            }
-        }
-        stage("worker - Build Image"){
-            container('docker') {
-                steps{
-                    dir("worker"){
-                        app = docker.build("pandalamdta/worker")
-                    }
-                }
-            }
-        }
-        stage("worker - Push image") {
-            container('docker') {
-                steps{
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
-            }
-        }
-}
-
+def app
 pipeline {
     agent {
         kubernetes {
@@ -64,7 +32,6 @@ pipeline {
         stage("server - Build Image"){
                 when { changeset "server/**"}
                 steps{
-                    def app
                     container('docker') {
                     dir("server"){
                         app = docker.build("pandalamdta/server")
@@ -95,7 +62,6 @@ pipeline {
             }
         }
         stage("worker - Build Image"){
-            def app
                 when { changeset "worker/**"}
                 steps{
                     container('docker') {
@@ -130,7 +96,6 @@ pipeline {
         stage("client - Build Image"){
                 when { changeset "client/**"}
                 steps{
-                    def app
                     container('docker') {
                     dir("client"){
                         app = docker.build("pandalamdta/client")
