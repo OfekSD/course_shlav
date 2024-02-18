@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "fib-calc.fullname" . }}-test-connection"
+  labels:
+    {{- include "fib-calc.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  restartPolicy: Never
+  containers:
+    - name: wget-server
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "fib-calc.fullname" . }}-server:5000']
+    - name: wget-client
+      image: busybox
+      command: ['wget']
+      args: 
+        - {{ include "fib-calc.fullname" . | printf "%s-client:30010"  }}
