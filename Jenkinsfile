@@ -204,11 +204,11 @@ spec:
                         sh "git config --global --add safe.directory '*'"
                         sh 'git status'
 
-                       changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
+                        changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                     }
                     if (changesStatus == 0) {
                         container('helm') {
-                            sh 'helm install fib-test ./helm '
+                            sh 'helm install fib-test ./helm --set ingress.enabled=false'
                             def testStatus = sh script: 'helm test fib-test', returnStatus: true
                             if (testStatus > 0) {
                                 sh 'helm uninstall fib-test '
@@ -224,11 +224,10 @@ spec:
             steps {
                 container('git') {
                     script {
-
                         sh "git config --global --add safe.directory '*'"
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
                         if (changesStatus == 0) {
-                        withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
+                            withCredentials([sshUserPrivateKey(credentialsId: 'github-creds', keyFileVariable: 'key')]) {
                                 sh 'mkdir -p ~/.ssh'
                                 sh 'cp /tmp/key/ssh-privatekey ~/.ssh/id_rsa'
                                 sh 'chmod 600 ~/.ssh/id_rsa'
@@ -240,9 +239,7 @@ spec:
                                 sh 'git add ./helm'
                                 sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER} updated helm'"
                                 sh 'git push git@github.com:OfekSD/fib_calculator.git'
-                            
-                        }
-
+                            }
                         }
                     }
                 }
@@ -250,5 +247,3 @@ spec:
         }
     }
 }
-
-
