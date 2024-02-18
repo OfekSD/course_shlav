@@ -16,6 +16,9 @@ spec:
     - name: ssh-key
       secret:
         secretName: ssh-key
+        items:
+        - key: id_rsa
+          path: id_rsa
   containers:
   - name: docker
     image: docker
@@ -44,6 +47,8 @@ spec:
     volumeMounts:
     - mountPath: "/root/.ssh"
       name: ssh-key
+      subPath: id_rsa
+      readOnly: true
   - name: node
     image: node:16-alpine
     command:
