@@ -192,18 +192,19 @@ spec:
         stage('Helm - Test') {
             steps {
                 script {
-                    container('git'){
+                    container('git') {
                         def changesStatus = sh script: 'git status | grep modified | grep helm', returnStatus: true
-                        if (changesStatus != 0)
                     }
-                    container('helm') {
-                            sh 'helm install fib-test ./helm -n fib-calc-test --create-namespace'
-                            def testStatus = sh script: 'helm test fib-test -n fib-calc-test', returnStatus: true
+                    if (changesStatus == 0) {
+                        container('helm') {
+                            sh 'helm install fib-test ./helm  --create-namespace'
+                            def testStatus = sh script: 'helm test fib-test', returnStatus: true
                             if (testStatus > 0) {
-                                sh 'helm uninstall fib-test -n fib-calc-test'
+                                sh 'helm uninstall fib-test '
                                 error: 'helm test failed'
                             }
-                            sh 'helm uninstall fib-test -n fib-calc-test'
+                            sh 'helm uninstall fib-test '
+                        }
                     }
                 }
             }
