@@ -51,25 +51,21 @@ spec:
         stage('server - Build Image') {
                 when { changeset 'server/**' }
                 steps {
-                    container('docker') {
                     dir('server') {
                         script {
                             app = docker.build('pandalamdta/server')
                         }
-                    }
                     }
                 }
         }
         stage('server - Push image') {
                 when { changeset 'server/**' }
                 steps {
-                    container('docker') {
                     script {
                         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push('latest')
                         }
-                    }
                     }
                 }
         }
@@ -87,24 +83,20 @@ spec:
         stage('worker - Build Image') {
                 when { changeset 'worker/**' }
                 steps {
-                    container('docker') {
                     dir('worker') {
                         script {
                             app = docker.build('pandalamdta/worker')
                         }
-                    }
                     }
                 }
         }
         stage('worker - Push image') {
                 when { changeset 'worker/**' }
                 steps {
-                    container('docker') {
                         script {
                         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push('latest')
-                        }
                         }
                     }
                 }
@@ -123,24 +115,20 @@ spec:
         stage('client - Build Image') {
                 when { changeset 'client/**' }
                 steps {
-                    container('docker') {
                     dir('client') {
                         script {
                             app = docker.build('pandalamdta/client')
                         }
-                    }
                     }
                 }
         }
         stage('client - Push image') {
                 when { changeset 'client/**' }
                 steps {
-                    container('docker') {
                         script {
                         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push('latest')
-                        }
                         }
                     }
                 }
