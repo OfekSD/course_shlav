@@ -4,7 +4,7 @@ client:
   replicas: 1
 server:
   image:
-    tag: '89'
+    tag: '90'
   replicas: 2
 worker:
   image:
