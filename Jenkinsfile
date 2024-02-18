@@ -13,6 +13,9 @@ spec:
     - name: helm
       hostPath:
         path: /usr/local/bin/helm
+    - name: ssh-key
+      secret:
+        secretName: ssh-key
   containers:
   - name: docker
     image: docker
@@ -38,6 +41,10 @@ spec:
     - sleep
     args:
     - infinity
+    volumeMounts:
+    - mountPath: "/root/.ssh"
+      name: ssh-key
+      readOnly: true
   - name: node
     image: node:16-alpine
     command:
@@ -223,10 +230,8 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                                 sh 'mkdir -p ~/.ssh'
-                                sh 'echo $key > ~/.ssh/id_rsa'
-                                sh 'chmod 600 ~/.ssh/id_rsa'
-                                sh 'ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts'
-                                sh "git config --global --add safe.directory '*'"
+                                sh 'ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts'
+                                sh 'GIT_SSH_COMMAND="ssh -i $key"'
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
                                 sh 'git config user.name jenkins-pipeline'
