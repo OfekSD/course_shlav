@@ -223,7 +223,7 @@ spec:
                         if (changesStatus == 0) {
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                             
-                            withEnv(['GIT_SSH_COMMAND ="ssh -i $key -o IdentitiesOnly=yes -F /dev/null"']) {
+                            withEnv(['GIT_SSH_COMMAND ="ssh -i $key -o IdentitiesOnly=yes -o StrictHostKeyChecking=no  -F /dev/null"']) {
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
                                 sh 'git config user.email jenkins@example.com'
