@@ -229,7 +229,7 @@ spec:
                                 sh 'git config user.email jenkins@example.com'
                                 sh 'git config user.name jenkins-pipeline'
                                 sh 'git add ./helm'
-                                sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER}' updated helm"
+                                sh "git commit -m 'Triggered Build: ${env.BUILD_NUMBER} updated helm'"
                                 sh 'git push git@github.com:OfekSD/fib_calculator_k8s.git'
                             }
                         }
