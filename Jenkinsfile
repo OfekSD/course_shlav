@@ -224,6 +224,7 @@ spec:
                         withCredentials([sshUserPrivateKey(credentialsId: "github-creds", keyFileVariable: 'key')]) {
                                 sh 'mkdir -p ~/.ssh'
                                 sh 'echo $key > ~/.ssh/id_rsa'
+                                sh 'chmod 600 ~/.ssh/id_rsa'
                                 sh 'ssh-keyscan -t rsa github.com > ~/.ssh/known_hosts'
                                 sh "git config --global --add safe.directory '*'"
                                 sh "git config --global --add safe.directory '*'"
