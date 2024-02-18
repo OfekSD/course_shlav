@@ -1,11 +1,10 @@
-
 client:
   image:
     tag: latest
   replicas: 1
 server:
   image:
-    tag: latest
+    tag: '89'
   replicas: 2
 worker:
   image:
@@ -14,10 +13,9 @@ worker:
 redis:
   enabled: true
   credConfigMap: ''
-
 postgres:
   enabled: true
   credSecret: ''
 ingress:
   enabled: true
-  hostnmae: 'fib.localhost'
+  hostnmae: fib.localhost
