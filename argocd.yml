@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fib-calculator 
+spec:
+  destination:
+    name: in-cluster
+    namespace: fib-calc
+  source:
+    path: helm
+    repoURL: https://github.com/OfekSD/fib_calculator.git
+    targetRevision: HEAD
+    directory: {}
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true 
